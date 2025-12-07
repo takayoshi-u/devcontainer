@@ -7,6 +7,7 @@ services:
     hostname: develop
     container_name: develop
     restart: unless-stopped
+    command: "/cmd.sh"
     privileged: true
     networks:
       - develop
@@ -33,6 +34,6 @@ networks:
     name: develop
 volumes:
   docker:
-    name: docker
+    name: ssh_docker
   home:
-    name: home
+    name: ssh_home

@@ -11,8 +11,8 @@ RUN echo "%sudo ALL=(ALL:ALL) NOPASSWD: ALL" | EDITOR="tee -a" visudo --file="/e
 
 # Go
 RUN FILE=$(curl https://go.dev/dl/?mode=json | jq -r "[.[] | select(.stable == true)] | .[0].files[] | select(.arch == \"${TARGETARCH}\" and .os == \"${TARGETOS}\") | .filename") && \
-    curl -L -o "${FILE}" "https://go.dev/dl/${FILE}" && \
-    tar -C /usr/local -xzf ${FILE} && \
+    curl -L -o "/tmp/${FILE}" "https://go.dev/dl/${FILE}" && \
+    tar -C /usr/local -xzf /tmp/${FILE} && \
     rm -f /tmp/${FILE} && \
     echo "export PATH=\$PATH:/usr/local/go/bin" > /etc/profile.d/go.sh
 RUN 
@@ -66,7 +66,17 @@ RUN useradd -m -s /bin/bash -G docker,sudo developer
 RUN { \
     echo "#!/bin/bash"; \
     echo ""; \
+    echo "if [ ! -f /etc/ssh/ssh_host_rsa_key ]"; \
+    echo "then"; \
+    echo "    ssh-keygen -A"; \
+    echo "fi"; \
+    echo "/usr/sbin/sshd"; \
+    echo ""; \
     echo "/bin/dockerd"; \
+    echo ""; \
+    echo "wait -n"; \
+    echo ""; \
+    echo "exit ${?}"; \
     } > /cmd.sh && \
     chmod +x /cmd.sh
 
