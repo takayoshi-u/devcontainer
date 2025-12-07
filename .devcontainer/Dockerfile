@@ -1,0 +1,140 @@
+FROM debian:stable-slim
+
+ARG TARGETARCH
+ARG TARGETOS
+
+RUN apt-get update
+RUN apt-get upgrade -y
+RUN apt-get install -y apt-transport-https build-essential buildah ca-certificates curl git gnupg gpg jq less locales-all nano php podman python3 python3-pip python3-venv rust-all skopeo ssh sudo unzip wget zsh
+
+RUN echo "%sudo ALL=(ALL:ALL) NOPASSWD: ALL" | EDITOR="tee -a" visudo --file="/etc/sudoers.d/sudo"
+
+# Go
+RUN FILE=$(curl https://go.dev/dl/?mode=json | jq -r "[.[] | select(.stable == true)] | .[0].files[] | select(.arch == \"${TARGETARCH}\" and .os == \"${TARGETOS}\") | .filename") && \
+    curl -L -o "${FILE}" "https://go.dev/dl/${FILE}" && \
+    tar -C /usr/local -xzf ${FILE} && \
+    rm -f /tmp/${FILE} && \
+    echo "export PATH=\$PATH:/usr/local/go/bin" > /etc/profile.d/go.sh
+RUN 
+
+# AWS CLI
+RUN curl -o "/tmp/awscliv2.zip" "https://awscli.amazonaws.com/awscli-exe-linux-$(uname -m).zip" && \
+    unzip -d /tmp /tmp/awscliv2.zip && \
+    /tmp/aws/install && \
+    rm -f /tmp/awscliv2.zip && \
+    rm -fr /tmp/aws
+
+# tenv
+RUN LATEST_VERSION=$(curl --silent https://api.github.com/repos/tofuutils/tenv/releases/latest | jq -r .tag_name) && \
+    curl -L -o "/tmp/tenv_${LATEST_VERSION}_amd64.deb" "https://github.com/tofuutils/tenv/releases/latest/download/tenv_${LATEST_VERSION}_amd64.deb" && \
+    dpkg -i "/tmp/tenv_${LATEST_VERSION}_amd64.deb" && \
+    rm -f /tmp/tenv_${LATEST_VERSION}_amd64.deb
+
+# Deno
+RUN curl -L -o "/tmp/deno.zip" "https://github.com/denoland/deno/releases/latest/download/deno-$(uname -m)-unknown-linux-gnu.zip" && \
+    unzip -d /usr/local/bin /tmp/deno.zip && \
+    rm -f "/tmp/deno.zip"
+
+# Docker
+RUN curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc && \
+    { \
+    echo "Types: deb"; \
+    echo "URIs: https://download.docker.com/linux/debian"; \
+    echo "Suites: $(. /etc/os-release && echo $VERSION_CODENAME)"; \
+    echo "Components: stable"; \
+    echo "Signed-By: /etc/apt/keyrings/docker.asc"; \
+    } > /etc/apt/sources.list.d/docker.sources
+
+# Google Cloud CLI
+RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /etc/apt/keyrings/cloud.google.gpg && \
+    { \
+    echo "Types: deb"; \
+    echo "URIs: https://packages.cloud.google.com/apt"; \
+    echo "Suites: cloud-sdk"; \
+    echo "Components: main"; \
+    echo "Signed-By: /etc/apt/keyrings/cloud.google.gpg"; \
+    } > /etc/apt/sources.list.d/google-cloud-sdk.sources
+
+# Node.js
+RUN curl -fsSL https://deb.nodesource.com/setup_24.x |bash -
+
+RUN apt-get update
+RUN apt-get install -y containerd.io docker-buildx-plugin docker-ce docker-ce-cli docker-compose-plugin google-cloud-cli nodejs
+
+RUN useradd -m -s /bin/bash -G docker,sudo developer
+
+RUN { \
+    echo "#!/bin/bash"; \
+    echo ""; \
+    echo "/bin/dockerd &"; \
+    } > /docker.sh && \
+    chmod +x /docker.sh
+
+LABEL devcontainer.metadata='[{ \
+    "remoteEnv": { \
+    "LANG": "ja_JP.UTF-8", \
+    "TENV_AUTO_INSTALL": "true", \
+    "TZ": "Asia/Tokyo" \
+    }, \
+    "remoteUser": "developer", \
+    "privileged": true, \
+    "mounts": [ \
+    { \
+    "source": "home", \
+    "target": "/home", \
+    "type": "volume" \
+    }, \
+    { \
+    "source": "docker", \
+    "target": "/var/lib/docker", \
+    "type": "volume" \
+    } \
+    ], \
+    "customizations": { \
+    "vscode": { \
+    "settings": { \
+    "files.exclude": { \
+    "**/.devcontainer": true, \
+    "**/.DS_Store": true, \
+    "**/.git": true, \
+    "**/.vscode": true, \
+    "**/Thumbs.db": true \
+    } \
+    }, \
+    "extensions": [ \
+    "AmazonWebServices.amazon-q-vscode", \
+    "AmazonWebServices.aws-toolkit-vscode", \
+    "dbaeumer.vscode-eslint", \
+    "denoland.vscode-deno", \
+    "GitHub.copilot-chat", \
+    "GitHub.remotehub", \
+    "GitHub.vscode-github-actions", \
+    "GitHub.vscode-pull-request-github", \
+    "GitLab.gitlab-workflow", \
+    "golang.Go", \
+    "Google.gemini-cli-vscode-ide-companion", \
+    "Google.geminicodeassist", \
+    "GoogleCloudTools.cloudcode", \
+    "HashiCorp.terraform", \
+    "ms-azuretools.vscode-docker", \
+    "MS-CEINTL.vscode-language-pack-ja", \
+    "ms-python.autopep8", \
+    "ms-python.isort", \
+    "ms-python.pylint", \
+    "ms-python.python", \
+    "ms-python.vscode-pylance", \
+    "ms-toolsai.jupyter", \
+    "ms-vscode.cpptools-extension-pack", \
+    "ms-vscode.live-server", \
+    "ms-vscode.makefile-tools", \
+    "ms-vscode.vscode-typescript-next", \
+    "Nuxtr.nuxt-vscode-extentions", \
+    "rust-lang.rust-analyzer", \
+    "xdebug.php-pack" \
+    ] \
+    } \
+    }, \
+    "postStartCommand": { \
+    "docker": "sudo /docker.sh" \
+    } \
+    }]'
