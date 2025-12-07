@@ -1,0 +1,38 @@
+services:
+  develop:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: develop
+    hostname: develop
+    container_name: develop
+    restart: unless-stopped
+    privileged: true
+    networks:
+      - develop
+    ports:
+      - target: 22
+        published: 2222
+        protocol: tcp
+        mode: host
+    volumes:
+      - type: volume
+        source: docker
+        target: /var/lib/docker
+      - type: volume
+        source: home
+        target: /home/developer
+      - type: bind
+        source: ${HOME:-}${USERPROFILE:-}/workspace
+        target: /workspace
+networks:
+  default:
+    name: bridge
+    external: true
+  develop:
+    name: develop
+volumes:
+  docker:
+    name: docker
+  home:
+    name: home

@@ -71,7 +71,7 @@
     "updateContentCommand": {},
     "postCreateCommand": {},
     "postStartCommand": {
-        "docker": "sudo /docker.sh"
+        "docker": "nohup bash -c 'sudo /bin/dockerd > /tmp/dockerd.log 2>&1 &' > /dev/null 2>&1"
     },
     "postAttachCommand": {}
 }

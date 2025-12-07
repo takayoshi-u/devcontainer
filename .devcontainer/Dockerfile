@@ -26,7 +26,7 @@ RUN curl -o "/tmp/awscliv2.zip" "https://awscli.amazonaws.com/awscli-exe-linux-$
 
 # tenv
 RUN LATEST_VERSION=$(curl --silent https://api.github.com/repos/tofuutils/tenv/releases/latest | jq -r .tag_name) && \
-    curl -L -o "/tmp/tenv_${LATEST_VERSION}_amd64.deb" "https://github.com/tofuutils/tenv/releases/latest/download/tenv_${LATEST_VERSION}_amd64.deb" && \
+    curl -L -o "/tmp/tenv_${LATEST_VERSION}_amd64.deb" "https://github.com/tofuutils/tenv/releases/latest/download/tenv_${LATEST_VERSION}_${TARGETARCH}.deb" && \
     dpkg -i "/tmp/tenv_${LATEST_VERSION}_amd64.deb" && \
     rm -f /tmp/tenv_${LATEST_VERSION}_amd64.deb
 
@@ -66,9 +66,9 @@ RUN useradd -m -s /bin/bash -G docker,sudo developer
 RUN { \
     echo "#!/bin/bash"; \
     echo ""; \
-    echo "/bin/dockerd &"; \
-    } > /docker.sh && \
-    chmod +x /docker.sh
+    echo "/bin/dockerd"; \
+    } > /cmd.sh && \
+    chmod +x /cmd.sh
 
 LABEL devcontainer.metadata='[{ \
     "remoteEnv": { \
