@@ -3,12 +3,16 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        - UID
+        - GID
     image: develop
     hostname: develop
     container_name: develop
     restart: unless-stopped
     command: "/cmd.sh"
     privileged: true
+    command: /cmd.sh
     networks:
       - develop
     ports:
@@ -17,6 +21,18 @@ services:
         protocol: tcp
         mode: host
     volumes:
+      - type: bind
+        source: ${HOME:-}${USERPROFILE:-}/.ssh
+        target: /home/developer/.ssh
+      # - type: bind
+      #   source: ${HOME:-}${USERPROFILE:-}/.aws
+      #   target: /home/developer/.aws
+      # - type: bind
+      #   source: ${HOME:-}${USERPROFILE:-}/.config/gcloud
+      #   target: /home/developer/.config/gcloud
+      - type: bind
+        source: ${HOME:-}${USERPROFILE:-}/.gitconfig
+        target: /home/developer/.gitconfig
       - type: volume
         source: docker
         target: /var/lib/docker

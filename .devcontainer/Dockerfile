@@ -1,4 +1,4 @@
-FROM debian:stable-slim
+FROM debian:stable-slim AS devcontainer
 
 ARG TARGETARCH
 ARG TARGETOS
@@ -66,85 +66,19 @@ RUN useradd -m -s /bin/bash -G docker,sudo developer
 RUN { \
     echo "#!/bin/bash"; \
     echo ""; \
-    echo "if [ ! -f /etc/ssh/ssh_host_rsa_key ]"; \
-    echo "then"; \
-    echo "    ssh-keygen -A"; \
-    echo "fi"; \
-    echo "/usr/sbin/sshd"; \
+    echo "/sbin/sshd"; \
     echo ""; \
-    echo "/bin/dockerd"; \
-    echo ""; \
-    echo "wait -n"; \
-    echo ""; \
-    echo "exit ${?}"; \
+    echo "/bin/dockerd > /var/log/dockerd.log 2>&1"; \
     } > /cmd.sh && \
     chmod +x /cmd.sh
 
-LABEL devcontainer.metadata='[{ \
-    "remoteEnv": { \
-    "LANG": "ja_JP.UTF-8", \
-    "TENV_AUTO_INSTALL": "true", \
-    "TZ": "Asia/Tokyo" \
-    }, \
-    "remoteUser": "developer", \
-    "privileged": true, \
-    "mounts": [ \
-    { \
-    "source": "home", \
-    "target": "/home", \
-    "type": "volume" \
-    }, \
-    { \
-    "source": "docker", \
-    "target": "/var/lib/docker", \
-    "type": "volume" \
-    } \
-    ], \
-    "customizations": { \
-    "vscode": { \
-    "settings": { \
-    "files.exclude": { \
-    "**/.devcontainer": true, \
-    "**/.DS_Store": true, \
-    "**/.git": true, \
-    "**/.vscode": true, \
-    "**/Thumbs.db": true \
-    } \
-    }, \
-    "extensions": [ \
-    "AmazonWebServices.amazon-q-vscode", \
-    "AmazonWebServices.aws-toolkit-vscode", \
-    "dbaeumer.vscode-eslint", \
-    "denoland.vscode-deno", \
-    "GitHub.copilot-chat", \
-    "GitHub.remotehub", \
-    "GitHub.vscode-github-actions", \
-    "GitHub.vscode-pull-request-github", \
-    "GitLab.gitlab-workflow", \
-    "golang.Go", \
-    "Google.gemini-cli-vscode-ide-companion", \
-    "Google.geminicodeassist", \
-    "GoogleCloudTools.cloudcode", \
-    "HashiCorp.terraform", \
-    "ms-azuretools.vscode-docker", \
-    "MS-CEINTL.vscode-language-pack-ja", \
-    "ms-python.autopep8", \
-    "ms-python.isort", \
-    "ms-python.pylint", \
-    "ms-python.python", \
-    "ms-python.vscode-pylance", \
-    "ms-toolsai.jupyter", \
-    "ms-vscode.cpptools-extension-pack", \
-    "ms-vscode.live-server", \
-    "ms-vscode.makefile-tools", \
-    "ms-vscode.vscode-typescript-next", \
-    "Nuxtr.nuxt-vscode-extentions", \
-    "rust-lang.rust-analyzer", \
-    "xdebug.php-pack" \
-    ] \
-    } \
-    }, \
-    "postStartCommand": { \
-    "docker": "sudo /docker.sh" \
-    } \
-    }]'
+LABEL devcontainer.metadata='[{}]'
+
+FROM devcontainer
+
+ARG UID
+ARG GID
+
+RUN usermod -o -u ${UID} developer
+RUN groupmod -o -g ${GID} developer
+RUN chown -R developer:developer /home/developer
