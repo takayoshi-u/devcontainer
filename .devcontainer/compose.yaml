@@ -10,7 +10,6 @@ services:
     hostname: develop
     container_name: develop
     restart: unless-stopped
-    command: "/cmd.sh"
     privileged: true
     command: /cmd.sh
     networks:
