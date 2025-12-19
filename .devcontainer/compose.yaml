@@ -21,26 +21,32 @@ services:
         mode: host
     volumes:
       - type: bind
-        source: ${HOME:-}${USERPROFILE:-}/.ssh
-        target: /home/developer/.ssh
-      # - type: bind
-      #   source: ${HOME:-}${USERPROFILE:-}/.aws
-      #   target: /home/developer/.aws
-      # - type: bind
-      #   source: ${HOME:-}${USERPROFILE:-}/.config/gcloud
-      #   target: /home/developer/.config/gcloud
+        source: ${HOME:-}${USERPROFILE:-}/.aws
+        target: /home/developer/.aws
+      - type: bind
+        source: ${HOME:-}${USERPROFILE:-}/.azure
+        target: /home/developer/.azure
+      - type: bind
+        source: ${HOME:-}${USERPROFILE:-}/.config/gcloud
+        target: /home/developer/.config/gcloud
+      - type: bind
+        source: ${HOME:-}${USERPROFILE:-}/.gemini
+        target: /home/developer/.gemini
       - type: bind
         source: ${HOME:-}${USERPROFILE:-}/.gitconfig
         target: /home/developer/.gitconfig
+      - type: bind
+        source: ${HOME:-}${USERPROFILE:-}/.ssh
+        target: /home/developer/.ssh
+      - type: bind
+        source: ${HOME:-}${USERPROFILE:-}/workspace
+        target: /workspace
       - type: volume
         source: docker
         target: /var/lib/docker
       - type: volume
         source: home
         target: /home/developer
-      - type: bind
-        source: ${HOME:-}${USERPROFILE:-}/workspace
-        target: /workspace
 networks:
   default:
     name: bridge
@@ -49,6 +55,6 @@ networks:
     name: develop
 volumes:
   docker:
-    name: ssh_docker
+    name: container_docker
   home:
-    name: ssh_home
+    name: container_home

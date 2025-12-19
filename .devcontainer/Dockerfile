@@ -5,7 +5,7 @@ ARG TARGETOS
 
 RUN apt-get update
 RUN apt-get upgrade -y
-RUN apt-get install -y apt-transport-https build-essential buildah ca-certificates curl git gnupg gpg jq less locales-all nano php podman python3 python3-pip python3-venv rust-all skopeo ssh sudo unzip wget zsh
+RUN apt-get install -y apt-transport-https build-essential buildah ca-certificates curl git gnupg gpg jq less locales-all lsb-release nano php podman python3 python3-pip python3-venv rust-all skopeo ssh sudo unzip wget zsh
 
 RUN echo "%sudo ALL=(ALL:ALL) NOPASSWD: ALL" | EDITOR="tee -a" visudo --file="/etc/sudoers.d/sudo"
 
@@ -23,6 +23,17 @@ RUN curl -o "/tmp/awscliv2.zip" "https://awscli.amazonaws.com/awscli-exe-linux-$
     /tmp/aws/install && \
     rm -f /tmp/awscliv2.zip && \
     rm -fr /tmp/aws
+
+# Azure CLI
+# RUN curl -fsLS https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o /etc/apt/keyrings/microsoft.gpg && \
+#     { \
+#     echo "Types: deb"; \
+#     echo "URIs: https://packages.microsoft.com/repos/azure-cli/"; \
+#     echo "Suites: $(lsb_release -cs)"; \
+#     echo "Components: main"; \
+#     echo "Architectures: $(dpkg --print-architecture)"; \
+#     echo "Signed-by: /etc/apt/keyrings/microsoft.gpg"; \
+#     } > /etc/apt/sources.list.d/azure-cli.sources
 
 # tenv
 RUN LATEST_VERSION=$(curl --silent https://api.github.com/repos/tofuutils/tenv/releases/latest | jq -r .tag_name) && \
@@ -59,18 +70,9 @@ RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -
 RUN curl -fsSL https://deb.nodesource.com/setup_24.x |bash -
 
 RUN apt-get update
-RUN apt-get install -y containerd.io docker-buildx-plugin docker-ce docker-ce-cli docker-compose-plugin google-cloud-cli nodejs
+RUN apt-get install -y azure-cli containerd.io docker-buildx-plugin docker-ce docker-ce-cli docker-compose-plugin google-cloud-cli nodejs
 
 RUN useradd -m -s /bin/bash -G docker,sudo developer
-
-RUN { \
-    echo "#!/bin/bash"; \
-    echo ""; \
-    echo "/sbin/sshd"; \
-    echo ""; \
-    echo "/bin/dockerd > /var/log/dockerd.log 2>&1"; \
-    } > /cmd.sh && \
-    chmod +x /cmd.sh
 
 LABEL devcontainer.metadata='[{}]'
 
@@ -82,3 +84,18 @@ ARG GID
 RUN usermod -o -u ${UID} developer
 RUN groupmod -o -g ${GID} developer
 RUN chown -R developer:developer /home/developer
+
+RUN { \
+    echo "export LANG=ja_JP.UTF-8"; \
+    echo "export TENV_AUTO_INSTALL=true"; \
+    echo "export TZ=Asia/Tokyo"; \
+    } >> /home/developer/.profile
+
+RUN { \
+    echo "#!/bin/bash"; \
+    echo ""; \
+    echo "/sbin/sshd"; \
+    echo ""; \
+    echo "/bin/dockerd > /var/log/dockerd.log 2>&1"; \
+    } > /cmd.sh && \
+    chmod +x /cmd.sh
