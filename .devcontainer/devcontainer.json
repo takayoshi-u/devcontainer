@@ -10,27 +10,27 @@
     "mounts": [
         {
             "type": "bind",
-            "source": "${LocalEnv:HOME}${LocalEnv:USERPROFILE}/.aws",
+            "source": "${localEnv:HOME}${localEnv:USERPROFILE}/.aws",
             "target": "/home/developer/.aws"
         },
         {
             "type": "bind",
-            "source": "${LocalEnv:HOME}${LocalEnv:USERPROFILE}/.azure",
+            "source": "${localEnv:HOME}${localEnv:USERPROFILE}/.azure",
             "target": "/home/developer/.azure"
         },
         {
             "type": "bind",
-            "source": "${LocalEnv:HOME}${LocalEnv:USERPROFILE}/.config/gcloud",
+            "source": "${localEnv:HOME}${localEnv:USERPROFILE}/.config/gcloud",
             "target": "/home/developer/.config/gcloud"
         },
         {
             "type": "bind",
-            "source": "${LocalEnv:HOME}${LocalEnv:USERPROFILE}/.gemini",
+            "source": "${localEnv:HOME}${localEnv:USERPROFILE}/.gemini",
             "target": "/home/developer/.gemini"
         },
         {
             "type": "bind",
-            "source": "${LocalEnv:HOME}${LocalEnv:USERPROFILE}/.ssh",
+            "source": "${localEnv:HOME}${localEnv:USERPROFILE}/.ssh",
             "target": "/home/developer/.ssh"
         },
         {
@@ -82,6 +82,7 @@
                 "google.geminicodeassist",
                 "googlecloudtools.cloudcode",
                 "hashicorp.terraform",
+                "mermaidchart.vscode-mermaid-chart",
                 "ms-azure-load-testing.microsoft-testing",
                 "ms-azuretools.azure-dev",
                 "ms-azuretools.vscode-azure-github-copilot",

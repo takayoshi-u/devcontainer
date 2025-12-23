@@ -22,6 +22,7 @@ ${1} --install-extension google.gemini-cli-vscode-ide-companion
 ${1} --install-extension google.geminicodeassist
 ${1} --install-extension googlecloudtools.cloudcode
 ${1} --install-extension hashicorp.terraform
+${1} --install-extension mermaidchart.vscode-mermaid-chart
 ${1} --install-extension ms-azure-load-testing.microsoft-testing
 ${1} --install-extension ms-azuretools.azure-dev
 ${1} --install-extension ms-azuretools.vscode-azure-github-copilot

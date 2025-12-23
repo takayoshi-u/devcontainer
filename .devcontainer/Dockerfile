@@ -99,3 +99,5 @@ RUN { \
     echo "/bin/dockerd > /var/log/dockerd.log 2>&1"; \
     } > /cmd.sh && \
     chmod +x /cmd.sh
+
+EXPOSE 22
