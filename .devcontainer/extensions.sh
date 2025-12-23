@@ -1,9 +1,10 @@
-#!/bin/bash
 
+#!/bin/bash
 ${1} --install-extension adobeexl.adobe-markdown-authoring
 ${1} --install-extension amazonwebservices.amazon-q-vscode
 ${1} --install-extension amazonwebservices.aws-toolkit-vscode
 ${1} --install-extension antfu.goto-alias
+${1} --install-extension anthropic.claude-code
 ${1} --install-extension asciidoctor.asciidoctor-vscode
 ${1} --install-extension davidanson.vscode-markdownlint
 ${1} --install-extension dbaeumer.vscode-eslint

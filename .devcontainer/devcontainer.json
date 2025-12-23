@@ -64,6 +64,7 @@
                 "amazonwebservices.amazon-q-vscode",
                 "amazonwebservices.aws-toolkit-vscode",
                 "antfu.goto-alias",
+                "anthropic.claude-code",
                 "asciidoctor.asciidoctor-vscode",
                 "davidanson.vscode-markdownlint",
                 "dbaeumer.vscode-eslint",
