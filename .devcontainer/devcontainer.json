@@ -150,6 +150,8 @@
             ]
         }
     },
+    "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
+    "workspaceFolder": "/workspace",
     "initializeCommand": {},
     "onCreateCommand": {},
     "updateContentCommand": {},
