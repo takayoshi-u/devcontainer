@@ -27,6 +27,12 @@ services:
         source: ${HOME:-}${USERPROFILE:-}/.azure
         target: /home/developer/.azure
       - type: bind
+        source: ${HOME:-}${USERPROFILE:-}/.claude
+        target: /home/developer/.claude
+      - type: bind
+        source: ${HOME:-}${USERPROFILE:-}/.codex
+        target: /home/developer/.codex
+      - type: bind
         source: ${HOME:-}${USERPROFILE:-}/.config/gcloud
         target: /home/developer/.config/gcloud
       - type: bind
