@@ -76,6 +76,8 @@ RUN useradd -m -s /bin/bash -G docker,sudo developer
 
 LABEL devcontainer.metadata='[{}]'
 
+ENTRYPOINT [ "/lib/systemd/systemd" ]
+
 FROM devcontainer
 
 ARG UID
@@ -91,13 +93,13 @@ RUN { \
     echo "export TZ=Asia/Tokyo"; \
     } >> /home/developer/.profile
 
-RUN { \
-    echo "#!/bin/bash"; \
-    echo ""; \
-    echo "/sbin/sshd"; \
-    echo ""; \
-    echo "/bin/dockerd > /var/log/dockerd.log 2>&1"; \
-    } > /cmd.sh && \
-    chmod +x /cmd.sh
+# RUN { \
+#     echo "#!/bin/bash"; \
+#     echo ""; \
+#     echo "/sbin/sshd"; \
+#     echo ""; \
+#     echo "/bin/dockerd > /var/log/dockerd.log 2>&1"; \
+#     } > /cmd.sh && \
+#     chmod +x /cmd.sh
 
 EXPOSE 22
