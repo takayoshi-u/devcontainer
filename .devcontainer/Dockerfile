@@ -3,6 +3,9 @@ FROM debian:stable-slim AS devcontainer
 ARG TARGETARCH
 ARG TARGETOS
 
+ARG USER
+ARG USERNAME
+
 RUN apt-get update
 RUN apt-get upgrade -y
 RUN apt-get install -y apt-transport-https build-essential buildah ca-certificates curl git gnupg gpg jq less locales-all lsb-release nano php podman python3 python3-pip python3-venv rust-all skopeo ssh sudo unzip wget zsh
@@ -72,7 +75,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_24.x |bash -
 RUN apt-get update
 RUN apt-get install -y azure-cli containerd.io docker-buildx-plugin docker-ce docker-ce-cli docker-compose-plugin google-cloud-cli nodejs
 
-RUN useradd -m -s /bin/bash -G docker,sudo developer
+RUN useradd -m -s /bin/bash -G docker,sudo ${USER}${USERNAME}
 
 LABEL devcontainer.metadata='[{}]'
 
@@ -80,16 +83,18 @@ FROM devcontainer
 
 ARG UID
 ARG GID
+ARG USER
+ARG USERNAME
 
-RUN usermod -o -u ${UID} developer
-RUN groupmod -o -g ${GID} developer
-RUN chown -R developer:developer /home/developer
+RUN usermod -o -u ${UID} ${USER}${USERNAME}
+RUN groupmod -o -g ${GID} ${USER}${USERNAME}
+RUN chown -R ${USER}${USERNAME}:${USER}${USERNAME} /home/${USER}${USERNAME}
 
 RUN { \
     echo "export LANG=ja_JP.UTF-8"; \
     echo "export TENV_AUTO_INSTALL=true"; \
     echo "export TZ=Asia/Tokyo"; \
-    } >> /home/developer/.profile
+    } >> /home/${USER}${USERNAME}/.profile
 
 RUN { \
     echo "#!/bin/bash"; \

@@ -5,7 +5,7 @@
         "TENV_AUTO_INSTALL": "true",
         "TZ": "Asia/Tokyo"
     },
-    "remoteUser": "developer",
+    "remoteUser": "${localEnv:USER}${localEnv:USERNAME}",
     "privileged": true,
     "mounts": [
         {
@@ -56,7 +56,11 @@
     ],
     "build": {
         "dockerfile": "Dockerfile",
-        "target": "devcontainer"
+        "target": "devcontainer",
+        "args": {
+            "USER": "${localEnv:USER}",
+            "USERNAME": "${localEnv:USERNAME}"
+        }
     },
     "customizations": {
         "vscode": {
