@@ -24,31 +24,31 @@ services:
       - /tmp
     volumes:
       - type: bind
-        source: ${HOME}${USERPROFILE}/.aws
-        target: /home/${USER}${USERNAME}/.aws
+        source: ${HOME:-}${USERPROFILE:-}/.aws
+        target: /home/${USER:-}${USERNAME:-}/.aws
       - type: bind
-        source: ${HOME}${USERPROFILE}/.azure
-        target: /home/${USER}${USERNAME}/.azure
+        source: ${HOME:-}${USERPROFILE:-}/.azure
+        target: /home/${USER:-}${USERNAME:-}/.azure
       - type: bind
-        source: ${HOME}${USERPROFILE}/.claude
-        target: /home/${USER}${USERNAME}/.claude
+        source: ${HOME:-}${USERPROFILE:-}/.claude
+        target: /home/${USER:-}${USERNAME:-}/.claude
       - type: bind
-        source: ${HOME}${USERPROFILE}/.codex
-        target: /home/${USER}${USERNAME}/.codex
+        source: ${HOME:-}${USERPROFILE:-}/.codex
+        target: /home/${USER:-}${USERNAME:-}/.codex
       - type: bind
-        source: ${HOME}${USERPROFILE}/.config/gcloud
-        target: /home/${USER}${USERNAME}/.config/gcloud
+        source: ${HOME:-}${USERPROFILE:-}/.config/gcloud
+        target: /home/${USER:-}${USERNAME:-}/.config/gcloud
       - type: bind
-        source: ${HOME}${USERPROFILE}/.gemini
-        target: /home/${USER}${USERNAME}/.gemini
+        source: ${HOME:-}${USERPROFILE:-}/.gemini
+        target: /home/${USER:-}${USERNAME:-}/.gemini
       - type: bind
-        source: ${HOME}${USERPROFILE}/.gitconfig
-        target: /home/${USER}${USERNAME}/.gitconfig
+        source: ${HOME:-}${USERPROFILE:-}/.gitconfig
+        target: /home/${USER:-}${USERNAME:-}/.gitconfig
       - type: bind
-        source: ${HOME}${USERPROFILE}/.ssh
-        target: /home/${USER}${USERNAME}/.ssh
+        source: ${HOME:-}${USERPROFILE:-}/.ssh
+        target: /home/${USER:-}${USERNAME:-}/.ssh
       - type: bind
-        source: ${HOME}${USERPROFILE}/workspace
+        source: ${HOME:-}${USERPROFILE:-}/workspace
         target: /workspace
       - type: volume
         source: containerd
@@ -58,7 +58,7 @@ services:
         target: /var/lib/docker
       - type: volume
         source: home
-        target: /home/${USER}${USERNAME}
+        target: /home/${USER:-}${USERNAME:-}
 networks:
   default:
     name: bridge
@@ -66,6 +66,8 @@ networks:
   develop:
     name: develop
 volumes:
+  containerd:
+    name: container_containerd
   docker:
     name: container_docker
   home:
