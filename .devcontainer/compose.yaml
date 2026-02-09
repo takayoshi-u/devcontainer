@@ -13,7 +13,6 @@ services:
     container_name: develop
     restart: unless-stopped
     privileged: true
-    command: /cmd.sh
     networks:
       - develop
     ports:
