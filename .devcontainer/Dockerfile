@@ -77,6 +77,8 @@ RUN apt-get install -y azure-cli containerd.io docker-buildx-plugin docker-ce do
 
 RUN useradd -m -s /bin/bash -G docker,sudo ${USER}${USERNAME}
 
+CMD ["/lib/systemd/systemd"]
+
 LABEL devcontainer.metadata='[{}]'
 
 FROM devcontainer
@@ -95,14 +97,5 @@ RUN { \
     echo "export TENV_AUTO_INSTALL=true"; \
     echo "export TZ=Asia/Tokyo"; \
     } >> /home/${USER}${USERNAME}/.profile
-
-RUN { \
-    echo "#!/bin/bash"; \
-    echo ""; \
-    echo "/sbin/sshd"; \
-    echo ""; \
-    echo "/bin/dockerd > /var/log/dockerd.log 2>&1"; \
-    } > /cmd.sh && \
-    chmod +x /cmd.sh
 
 EXPOSE 22

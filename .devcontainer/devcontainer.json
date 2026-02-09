@@ -5,43 +5,49 @@
         "TENV_AUTO_INSTALL": "true",
         "TZ": "Asia/Tokyo"
     },
+    "overrideCommand": false,
     "remoteUser": "${localEnv:USER}${localEnv:USERNAME}",
     "privileged": true,
     "mounts": [
         {
             "type": "bind",
             "source": "${localEnv:HOME}${localEnv:USERPROFILE}/.aws",
-            "target": "/home/developer/.aws"
+            "target": "/home/${localEnv:USER}${localEnv:USERNAME}/.aws"
         },
         {
             "type": "bind",
             "source": "${localEnv:HOME}${localEnv:USERPROFILE}/.azure",
-            "target": "/home/developer/.azure"
+            "target": "/home/${localEnv:USER}${localEnv:USERNAME}/.azure"
         },
         {
             "type": "bind",
             "source": "${localEnv:HOME}${localEnv:USERPROFILE}/.claude",
-            "target": "/home/developer/.claude"
+            "target": "/home/${localEnv:USER}${localEnv:USERNAME}/.claude"
         },
         {
             "type": "bind",
             "source": "${localEnv:HOME}${localEnv:USERPROFILE}/.codex",
-            "target": "/home/developer/.codex"
+            "target": "/home/${localEnv:USER}${localEnv:USERNAME}/.codex"
         },
         {
             "type": "bind",
             "source": "${localEnv:HOME}${localEnv:USERPROFILE}/.config/gcloud",
-            "target": "/home/developer/.config/gcloud"
+            "target": "/home/${localEnv:USER}${localEnv:USERNAME}/.config/gcloud"
         },
         {
             "type": "bind",
             "source": "${localEnv:HOME}${localEnv:USERPROFILE}/.gemini",
-            "target": "/home/developer/.gemini"
+            "target": "/home/${localEnv:USER}${localEnv:USERNAME}/.gemini"
         },
         {
             "type": "bind",
             "source": "${localEnv:HOME}${localEnv:USERPROFILE}/.ssh",
-            "target": "/home/developer/.ssh"
+            "target": "/home/${localEnv:USER}${localEnv:USERNAME}/.ssh"
+        },
+        {
+            "type": "volume",
+            "source": "devcontainer_containerd",
+            "target": "/var/lib/containerd"
         },
         {
             "type": "volume",
@@ -52,6 +58,10 @@
             "type": "volume",
             "source": "devcontainer_home",
             "target": "/home"
+        },
+        {
+            "type": "tmpfs",
+            "target": "/tmp"
         }
     ],
     "build": {
@@ -160,8 +170,6 @@
     "onCreateCommand": {},
     "updateContentCommand": {},
     "postCreateCommand": {},
-    "postStartCommand": {
-        "docker": "sudo nohup bash -c '/bin/dockerd > /var/log/dockerd.log 2>&1 &' > /dev/null 2>&1"
-    },
+    "postStartCommand": {},
     "postAttachCommand": {}
 }

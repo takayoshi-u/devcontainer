@@ -21,40 +21,45 @@ services:
         published: 2222
         protocol: tcp
         mode: host
+    tmpfs:
+      - /tmp
     volumes:
       - type: bind
         source: ${HOME}${USERPROFILE}/.aws
-        target: /home/developer/.aws
+        target: /home/${USER}${USERNAME}/.aws
       - type: bind
         source: ${HOME}${USERPROFILE}/.azure
-        target: /home/developer/.azure
+        target: /home/${USER}${USERNAME}/.azure
       - type: bind
         source: ${HOME}${USERPROFILE}/.claude
-        target: /home/developer/.claude
+        target: /home/${USER}${USERNAME}/.claude
       - type: bind
         source: ${HOME}${USERPROFILE}/.codex
-        target: /home/developer/.codex
+        target: /home/${USER}${USERNAME}/.codex
       - type: bind
         source: ${HOME}${USERPROFILE}/.config/gcloud
-        target: /home/developer/.config/gcloud
+        target: /home/${USER}${USERNAME}/.config/gcloud
       - type: bind
         source: ${HOME}${USERPROFILE}/.gemini
-        target: /home/developer/.gemini
+        target: /home/${USER}${USERNAME}/.gemini
       - type: bind
         source: ${HOME}${USERPROFILE}/.gitconfig
-        target: /home/developer/.gitconfig
+        target: /home/${USER}${USERNAME}/.gitconfig
       - type: bind
         source: ${HOME}${USERPROFILE}/.ssh
-        target: /home/developer/.ssh
+        target: /home/${USER}${USERNAME}/.ssh
       - type: bind
         source: ${HOME}${USERPROFILE}/workspace
         target: /workspace
+      - type: volume
+        source: containerd
+        target: /var/lib/containerd
       - type: volume
         source: docker
         target: /var/lib/docker
       - type: volume
         source: home
-        target: /home/developer
+        target: /home/${USER}${USERNAME}
 networks:
   default:
     name: bridge
