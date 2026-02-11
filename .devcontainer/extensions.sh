@@ -70,6 +70,7 @@ ${1} --install-extension nuxt.mdc
 ${1} --install-extension nuxtr.nuxt-vscode-extentions
 ${1} --install-extension nuxtr.nuxtr-vscode
 ${1} --install-extension openai.chatgpt
+${1} --install-extension oracle.oci-vscode-toolkit
 ${1} --install-extension redhat.vscode-yaml
 ${1} --install-extension rust-lang.rust-analyzer
 ${1} --install-extension teamsdevapp.vscode-ai-foundry
