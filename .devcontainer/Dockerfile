@@ -35,12 +35,6 @@ RUN case ${TARGETARCH} in \
     dpkg -i /tmp/session-manager-plugin.deb && \
     rm -f /tmp/session-manager-plugin.deb
 
-# OCI Cli
-RUN curl -fsSL -o "/tmp/install.sh" "https://raw.githubusercontent.com/oracle/oci-cli/master/scripts/install/install.sh" && \
-    chmod +x /tmp/install.sh && \
-    /tmp/install.sh --accept-all-defaults && \
-    rm -f /tmp/install.sh
-
 # Azure CLI
 # RUN curl -fsSL "https://packages.microsoft.com/keys/microsoft.asc" | gpg --dearmor -o /etc/apt/keyrings/microsoft.gpg && \
 #     { \
